@@ -12,7 +12,7 @@ Bao gồm:
 ## Clone dự án
 
 ```bash
-git clone https://github.com/lenhattri/slugify_tieng_viet_demo.git
+git clone https://github.com/lenhattri/slugify-tieng-viet-demo.git
 cd slugify_tieng_viet_demo
 ````
 
