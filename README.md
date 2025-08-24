@@ -90,7 +90,7 @@ File `slugify_test.py` có 30+ ca test: dữ liệu Việt hoá, dash Unicode, e
 Chạy test:
 
 ```bash
-pytest -q slugify_test.py
+python3 -m pytest -q slugify_test.py
 ```
 
 Ví dụ output:
