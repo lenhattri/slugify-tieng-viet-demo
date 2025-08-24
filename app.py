@@ -4,14 +4,9 @@ from tkinter import ttk, messagebox
 
 try:
     from slugify import slugify_tieng_viet
-except Exception:
-    try:
-        from my_slugify import slugify_tieng_viet
-    except Exception as e:
-        slugify_tieng_viet = None
-        _import_error = e
-    else:
-        _import_error = None
+except Exception as e:
+    slugify_tieng_viet = None
+    _import_error = e
 else:
     _import_error = None
 
@@ -19,42 +14,54 @@ else:
 class SlugifyApp(ttk.Frame):
     def __init__(self, master):
         super().__init__(master, padding=16)
-        self.master.title("Slugify Tiếng Việt – Demo UI")
-        self.master.geometry("700x320")
-        self.master.minsize(560, 240)
+        self.master.title("Slugify Tiếng Việt – Demo UI (Suffix)")
+        self.master.geometry("720x360")
+        self.master.minsize(580, 260)
 
-        # Biến trạng thái
+        # State
         self.in_var = tk.StringVar()
         self.out_var = tk.StringVar()
         self.maxlen_var = tk.StringVar()
+        self.suffix_mode_var = tk.StringVar(value="none")
         self.config_visible = tk.BooleanVar(value=False)
 
         # Layout
         self.columnconfigure(1, weight=1)
         self.master.bind("<Return>", self._on_enter)
 
-        # Đầu vào
+        # Input
         ttk.Label(self, text="Đầu vào").grid(row=0, column=0, sticky="w", padx=(0, 8), pady=(0, 6))
         self.in_entry = ttk.Entry(self, textvariable=self.in_var)
         self.in_entry.grid(row=0, column=1, sticky="ew", pady=(0, 6))
 
-        # Đầu ra
+        # Output
         ttk.Label(self, text="Đầu ra").grid(row=1, column=0, sticky="w", padx=(0, 8), pady=(0, 6))
         self.out_entry = ttk.Entry(self, textvariable=self.out_var, state="readonly")
         self.out_entry.grid(row=1, column=1, sticky="ew", pady=(0, 6))
 
-        # Nút config toggle (hàng 2)
+        # Toggle config (row 2)
         self.config_btn = ttk.Button(self, text="▼ Cấu hình", command=self.toggle_config)
         self.config_btn.grid(row=2, column=0, columnspan=2, sticky="w", pady=(6, 0))
 
-        # Khung config (ẩn ban đầu, sẽ hiển thị ở hàng 3)
+        # Config frame (row 3 when shown)
         self.cfg_frame = ttk.Labelframe(self, text="Cấu hình")
-        self.cfg_frame.columnconfigure(1, weight=1)
+        self.cfg_frame.columnconfigure(3, weight=1)
+
         ttk.Label(self.cfg_frame, text="max_len").grid(row=0, column=0, sticky="w", padx=(6, 8), pady=6)
         self.maxlen_entry = ttk.Entry(self.cfg_frame, textvariable=self.maxlen_var, width=10)
         self.maxlen_entry.grid(row=0, column=1, sticky="w", pady=6)
 
-        # Nút hành động (hàng 4)
+        ttk.Label(self.cfg_frame, text="suffix").grid(row=0, column=2, sticky="w", padx=(16, 8), pady=6)
+        self.suffix_combo = ttk.Combobox(
+            self.cfg_frame,
+            textvariable=self.suffix_mode_var,
+            state="readonly",
+            values=["none", "random4", "random6", "date", "datetime"],
+            width=12
+        )
+        self.suffix_combo.grid(row=0, column=3, sticky="w", pady=6)
+
+        # Actions (row 4)
         btns = ttk.Frame(self)
         btns.grid(row=4, column=1, sticky="e", pady=(8, 0))
         self.submit_btn = ttk.Button(btns, text="Submit", command=self.on_submit)
@@ -62,18 +69,17 @@ class SlugifyApp(ttk.Frame):
         self.submit_btn.grid(row=0, column=0, padx=(0, 8))
         self.clear_btn.grid(row=0, column=1)
 
-        # Cảnh báo import
+        # Import warning
         if slugify_tieng_viet is None:
             ttk.Label(
                 self,
                 foreground="#b00020",
-                text="Không import được slugify_tieng_viet. Đặt app.py cùng thư mục với slugify.py hoặc my_slugify.py."
+                text=f"Không import được slugify_tieng_viet. Chi tiết: {_import_error}"
             ).grid(row=5, column=0, columnspan=2, sticky="w", pady=(10, 0))
 
         self.pack(fill="both", expand=True)
         self.in_entry.focus()
 
-        # Theo dõi để bật/tắt nút Xóa
         self.out_var.trace_add("write", lambda *_: self._update_clear_state())
 
     def toggle_config(self):
@@ -97,8 +103,9 @@ class SlugifyApp(ttk.Frame):
 
         src = self.in_var.get().strip()
         maxlen = self._parse_maxlen()
+        suffix_mode = self.suffix_mode_var.get().strip().lower() or "none"
 
-        out = slugify_tieng_viet(src, max_len=maxlen)
+        out = slugify_tieng_viet(src, max_len=maxlen, suffix_mode=suffix_mode)
         self.out_entry.configure(state="normal")
         self.out_var.set(out)
         self.out_entry.configure(state="readonly")
@@ -109,7 +116,6 @@ class SlugifyApp(ttk.Frame):
         self.out_var.set("")
         self.out_entry.configure(state="readonly")
         self.in_entry.focus()
-        # Collapse config khi bấm Xóa
         if self.config_visible.get():
             self.toggle_config()
 

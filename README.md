@@ -1,11 +1,12 @@
+
 # Slugify Tiếng Việt
 
-Dự án nhỏ bằng **Python** để chuyển đổi chuỗi tiếng Việt (có dấu, ký tự Unicode phức tạp, emoji, ký tự đặc biệt) thành **slug ASCII an toàn cho URL**.  
+Dự án nhỏ bằng **Python** để chuyển đổi chuỗi tiếng Việt (có dấu, Unicode phức tạp, emoji, ký tự đặc biệt) thành **slug ASCII an toàn cho URL**.  
 Bao gồm:
 
-- `slugify.py` : module xử lý chính (hàm `slugify_tieng_viet`).
-- `slugify_test.py` : bộ **unit test** với `pytest` (30+ test case, kiểm tra quy tắc bất biến, max_len…).
-- `app.py` : ứng dụng **GUI Tkinter** đơn giản để thử trực tiếp.
+- `slugify.py`: module xử lý chính, hàm `slugify_tieng_viet(text, max_len=None, suffix_mode="none")`.
+- `slugify_test.py`: bộ **unit test** với `pytest` (30+ case, kiểm tra bất biến, `max_len`…).
+- `app.py`: ứng dụng **GUI Tkinter** để thử trực tiếp, có **Cấu hình** cho `max_len` và **suffix**.
 
 ---
 
@@ -13,14 +14,14 @@ Bao gồm:
 
 ```bash
 git clone https://github.com/lenhattri/slugify-tieng-viet-demo.git
-cd slugify_tieng_viet_demo
+cd slugify-tieng-viet-demo
 ````
 
 ---
 
 ## Sơ đồ pipeline
 
-Hàm `slugify_tieng_viet` xử lý theo pipeline chuẩn hóa → làm sạch → hậu xử lý.
+Hàm `slugify_tieng_viet` xử lý theo chuỗi: **chuẩn hóa → làm sạch → gắn suffix (nếu có) → cắt thông minh → dọn dẹp lần cuối**.
 
 ![Sơ đồ pipeline](sodo.png)
 
@@ -31,7 +32,7 @@ Hàm `slugify_tieng_viet` xử lý theo pipeline chuẩn hóa → làm sạch �
 Yêu cầu:
 
 * Python >= 3.9
-* Tkinter (có sẵn trong bản cài Python chuẩn)
+* Tkinter (thường có sẵn cùng Python)
 
 Cài thêm `pytest` để chạy unit test:
 
@@ -39,11 +40,15 @@ Cài thêm `pytest` để chạy unit test:
 pip install pytest
 ```
 
+> Trên Windows, nên dùng:
+>
+> ```bash
+> python -m pip install -U pytest
+> ```
+
 ---
 
 ## Sử dụng module
-
-Ví dụ:
 
 ```python
 from slugify import slugify_tieng_viet
@@ -56,15 +61,33 @@ print(slugify_tieng_viet("Xin chào 🌟🔥"))
 
 print(slugify_tieng_viet("đi-cho-nhanh", max_len=5))
 # -> "di-cho" hoặc "di"
+
+# Dùng suffix:
+print(slugify_tieng_viet("Một bài viết", suffix_mode="random4"))
+# -> "mot-bai-viet-a1b2" (ví dụ)
+print(slugify_tieng_viet("Một bài viết", suffix_mode="date"))
+# -> "mot-bai-viet-20250824" (ví dụ)
+print(slugify_tieng_viet("Một bài viết", max_len=20, suffix_mode="random6"))
+# suffix được tính vào độ dài cắt thông minh
 ```
+
+### `suffix_mode` hỗ trợ
+
+* `none` (mặc định): không gắn suffix
+* `random4`: chuỗi hex ngẫu nhiên 4 ký tự
+* `random6`: chuỗi hex ngẫu nhiên 6 ký tự
+* `date`: yyyyMMdd
+* `datetime`: yyyyMMddHHmm
+
+> Lưu ý: suffix được gắn **sau khi làm sạch** nhưng **trước khi cắt `max_len`** → tổng chiều dài bao gồm cả suffix.
 
 ---
 
 ## Unit Test
 
-File `slugify_test.py` chứa hơn 30 test case với `pytest`.
+File `slugify_test.py` có 30+ ca test: dữ liệu Việt hoá, dash Unicode, emoji, NFD vs NFC, bất biến, `max_len`…
 
-### Chạy test:
+Chạy test:
 
 ```bash
 pytest -q slugify_test.py
@@ -79,19 +102,20 @@ Ví dụ output:
 
 ---
 
-## Ứng dụng GUI
+## Ứng dụng GUI (Tkinter)
 
-File `app.py` cung cấp **giao diện Tkinter**:
+`app.py` có:
 
-* Ô nhập “Đầu vào”.
-* Ô hiển thị “Đầu ra”.
-* Nút **Submit** (hoặc nhấn Enter).
-* Nút **Xóa** (sáng lên khi đã có đầu ra).
-* Nút toggle **Cấu hình** (`▼ Cấu hình` / `▲ Cấu hình`) để mở/đóng phần config.
+* Ô “Đầu vào”
+* Ô “Đầu ra”
+* Nút **Submit** (phím tắt **Enter**)
+* Nút **Xóa** (chỉ sáng khi đã có đầu ra)
+* Nút toggle **Cấu hình** (`▼/▲ Cấu hình`)
 
-  * Trong config có `max_len`.
+  * `max_len` (để trống nếu không giới hạn)
+  * `suffix` (dropdown: `none`, `random4`, `random6`, `date`, `datetime`)
 
-### Chạy app:
+Chạy app:
 
 ```bash
 python app.py
@@ -99,7 +123,7 @@ python app.py
 
 ---
 
-## Ví dụ cực khó
+## Ví dụ “ác mộng”
 
 Input:
 
@@ -119,11 +143,11 @@ Output:
 
 ```
 .
-├── app.py             # GUI Tkinter
-├── slugify.py         # Module xử lý slugify_tieng_viet
-├── slugify_test.py    # Unit test với pytest
-├── sodo.png           # Sơ đồ pipeline
-└── README.md          # Tài liệu
+├── app.py               # GUI Tkinter
+├── slugify.py           # Module slugify_tieng_viet (có suffix_mode)
+├── slugify_test.py      # Unit test với pytest
+├── sodo.png             # Sơ đồ pipeline dạng ảnh
+└── README.md            # Tài liệu
 ```
 
 ---
@@ -131,7 +155,4 @@ Output:
 ## License
 
 MIT
-
-
-
 
