@@ -9,32 +9,27 @@ Bao gồm:
 
 ---
 
-## Tính năng
+## Clone dự án
 
-- Chuẩn hóa Unicode (NFC, NFKD).
-- Map đặc biệt `đ/Đ → d/D`.
-- Gom mọi loại dấu gạch Unicode (`– — ‒ − …`) thành dấu `-`.
-- Bỏ dấu thanh, bỏ ký tự không ASCII, bỏ emoji.
-- Chỉ giữ lại `[a-z0-9-]`.
-- Bỏ `--`, bỏ dấu `-` đầu/cuối.
-- Hỗ trợ `max_len`: cắt thông minh tại dấu `-`, hoặc cắt cứng nếu không có, không để `-` ở cuối.
-- Bất biến:
-  - `slugify(slug) == slug`.
-  - `slugify(NFD(x)) == slugify(NFC(x))`.
+```bash
+git clone https://github.com/lenhattri/slugify_tieng_viet_demo.git
+cd slugify_tieng_viet_demo
+````
 
 ---
 
 ## Cài đặt
 
 Yêu cầu:
-- Python >= 3.13
-- Tkinter (có sẵn trong bản cài Python chuẩn)
+
+* Python >= 3.9
+* Tkinter (có sẵn trong bản cài Python chuẩn)
 
 Cài thêm `pytest` để chạy unit test:
 
 ```bash
 pip install pytest
-````
+```
 
 ---
 
@@ -137,6 +132,10 @@ Output:
 └── README.md          # Tài liệu
 ```
 
+---
 
+## License
+
+MIT
 
 
