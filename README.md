@@ -18,6 +18,14 @@ cd slugify_tieng_viet_demo
 
 ---
 
+## Sơ đồ pipeline
+
+Hàm `slugify_tieng_viet` xử lý theo pipeline chuẩn hóa → làm sạch → hậu xử lý.
+
+![Sơ đồ pipeline](sodo.png)
+
+---
+
 ## Cài đặt
 
 Yêu cầu:
@@ -62,15 +70,7 @@ File `slugify_test.py` chứa hơn 30 test case với `pytest`.
 pytest -q slugify_test.py
 ```
 
-Một số test nổi bật:
-
-* So khớp kết quả slug với nhiều input tiếng Việt phức tạp.
-* Đảm bảo chỉ có `[a-z0-9-]`, không có `--`, không dấu `-` ở đầu/cuối.
-* Kiểm tra bất biến: `slugify(slug)` không đổi.
-* Kiểm tra NFD/NFC cho kết quả giống nhau.
-* Kiểm tra logic `max_len`.
-
-Ví dụ output khi chạy:
+Ví dụ output:
 
 ```
 ................................................
@@ -97,13 +97,6 @@ File `app.py` cung cấp **giao diện Tkinter**:
 python app.py
 ```
 
-Giao diện:
-
-* Gõ chuỗi tiếng Việt vào ô “Đầu vào”.
-* Bấm Submit hoặc Enter → “Đầu ra” hiển thị slug.
-* Bấm **Xóa** để làm mới (cả đầu vào/ra, và collapse config nếu đang mở).
-* Mở/đóng khung “Cấu hình” để chỉnh `max_len`.
-
 ---
 
 ## Ví dụ cực khó
@@ -129,6 +122,7 @@ Output:
 ├── app.py             # GUI Tkinter
 ├── slugify.py         # Module xử lý slugify_tieng_viet
 ├── slugify_test.py    # Unit test với pytest
+├── sodo.png           # Sơ đồ pipeline
 └── README.md          # Tài liệu
 ```
 
@@ -137,5 +131,7 @@ Output:
 ## License
 
 MIT
+
+
 
 
