@@ -67,7 +67,7 @@ File `slugify_test.py` chứa hơn 30 test case với `pytest`.
 ### Chạy test:
 
 ```bash
-pytest -q slugify_test.py
+python3 -m pytest -q slugify_test.py
 ```
 
 Ví dụ output:
