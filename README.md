@@ -27,7 +27,7 @@ Bao gồm:
 ## Cài đặt
 
 Yêu cầu:
-- Python >= 3.9
+- Python >= 3.13
 - Tkinter (có sẵn trong bản cài Python chuẩn)
 
 Cài thêm `pytest` để chạy unit test:
