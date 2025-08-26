@@ -90,14 +90,14 @@ File `slugify_test.py` có 60+ ca test: dữ liệu Việt hoá, dash Unicode, e
 Chạy test:
 
 ```bash
-python3 -m pytest -q slugify_test.py
+python3 -m pytest 
 ```
 
 Ví dụ output:
 
 ```
 ................................................
-52 passed in 0.45s
+666 passed in 0.45s
 ```
 
 ---
@@ -123,7 +123,7 @@ python app.py
 
 ---
 
-## Ví dụ “ác mộng”
+## Ví dụ
 
 Input:
 
