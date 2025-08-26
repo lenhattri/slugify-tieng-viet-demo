@@ -85,7 +85,7 @@ print(slugify_tieng_viet("Một bài viết", max_len=20, suffix_mode="random6")
 
 ## Unit Test
 
-File `slugify_test.py` có 30+ ca test: dữ liệu Việt hoá, dash Unicode, emoji, NFD vs NFC, bất biến, `max_len`…
+File `slugify_test.py` có 60+ ca test: dữ liệu Việt hoá, dash Unicode, emoji, NFD vs NFC, bất biến, `max_len`…
 
 Chạy test:
 
